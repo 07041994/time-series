@@ -29,33 +29,53 @@ ma2x4 <- ma(t, order=4, centre=TRUE)# for even
 
 
 # forecast by seasonal decompostion
+
 r=stl(t,s.window = "periodic")
+
 eeadj <- seasadj(r)
+
 fit=naive(eeadj)
+
 plot(naive(eeadj), xlab="New orders index",
   main="Naive forecasts of seasonally adjusted data")
+
 fcast <- forecast(fit, method="naive")
+
 s=snaive(r$time.series[,"seasonal"])
+
 forecast=s$mean+fcast$mean
+
 #Simple exponential method
 s=ses(t,h=2)
 
 # holt method with trend
+
 h=holt(t,h=5,alpha=0.8,beta=0.3)
 
 # holt method with damped
+
 h=holt(t,h=5,alpha=0.8,beta=0.3)
 
 # ARIMA modelling
+
 d=diff(log(t),lag=12,1)# for seasonal data
+
 d=diff(log(t)) # for non seasonal data
+
+
 ac=ggacf(t)
+
 pac=ggpacf(t)
+
 tsdisplay(diff(eeadj),main="")
+
 Box.test(residuals(fit), lag=24, fitdf=4, type="Ljung") # portmanteau test
 
 
 r=seas(t,x11="")
+
 trecy=trendcycle(r,series="Trend")
+
 seaad=seasadj(r,series="seasonally-adjusted data")
+
 r %>% seasonal() %>% ggsubseriesplot() + ylab("Seasonal")
